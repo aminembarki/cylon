@@ -104,4 +104,106 @@ describe("Helpers", function() {
       expect(fn([])).to.be.eql(false);
     });
   });
+
+  describe("#pluck", function() {
+    var object = { a: { item: "hello" }, b: { item: "world" } },
+        array = [ { item: "hello" }, { item: "world" } ];
+
+    it("plucks values from a collection", function() {
+      expect(_.pluck(object, "item")).to.be.eql(["hello", "world"]);
+      expect(_.pluck(array, "item")).to.be.eql(["hello", "world"]);
+    });
+  });
+
+  describe("#map", function() {
+    var object = { a: { item: "hello" }, b: { item: "world" } },
+        array = [ { item: "hello" }, { item: "world" } ];
+
+    var fn = function(value, key) {
+      return [value, key];
+    };
+
+    it("runs a function over items in a collection", function() {
+      expect(_.map(object, fn)).to.be.eql([
+        [{ item: "hello" }, "a"],
+        [{ item: "world" }, "b"]
+      ]);
+
+      expect(_.map(array, fn)).to.be.eql([
+        [{ item: "hello" }, 0],
+        [{ item: "world" }, 1]
+      ]);
+    });
+  });
+
+  describe("#invoke", function() {
+    var array = [
+      {
+        name: "bob",
+        toString: function() {
+          return "Hi from " + this.name;
+        }
+      },
+      {
+        name: "dave",
+        toString: function() {
+          return "hello from " + this.name;
+        }
+      }
+    ];
+
+    var object = {
+      bob: {
+        name: "bob",
+        toString: function() {
+          return "Hi from " + this.name;
+        }
+      },
+      dave: {
+        name: "dave",
+        toString: function() {
+          return "hello from " + this.name;
+        }
+      }
+    };
+
+    it("runs a instance function over items in a collection", function() {
+      expect(_.invoke(object, "toString")).to.be.eql([
+        "Hi from bob",
+        "hello from dave"
+      ]);
+
+      expect(_.invoke(array, "toString")).to.be.eql([
+        "Hi from bob",
+        "hello from dave"
+      ]);
+
+      expect(_.invoke([1, 2, 3, 4, 5], Number.prototype.toString)).to.be.eql([
+        "1", "2", "3", "4", "5"
+      ]);
+    });
+  });
+
+  describe("#each", function() {
+    var object = { a: { item: "hello" }, b: { item: "world" } },
+        array = [ { item: "hello" }, { item: "world" } ];
+
+    var fn = function(value, key) {
+      return [value, key];
+    };
+
+    it("runs a function over items in a collection", function() {
+      fn = spy();
+      _.map(object, fn);
+
+      expect(fn).to.be.calledWith(object.a, "a");
+      expect(fn).to.be.calledWith(object.b, "b");
+
+      fn = spy();
+      _.map(array, fn);
+
+      expect(fn).to.be.calledWith(array[0], 0);
+      expect(fn).to.be.calledWith(array[1], 1);
+    });
+  });
 });
