@@ -134,6 +134,11 @@ describe("Helpers", function() {
         [{ item: "world" }, 1]
       ]);
     });
+
+    it("defaults to the identity function", function() {
+      expect(_.map(array)).to.be.eql(array);
+      expect(_.map(object)).to.be.eql(array);
+    });
   });
 
   describe("#invoke", function() {
