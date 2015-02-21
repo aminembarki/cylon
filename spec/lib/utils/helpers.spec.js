@@ -206,4 +206,13 @@ describe("Helpers", function() {
       expect(fn).to.be.calledWith(array[1], 1);
     });
   });
+
+  describe("#arity", function() {
+    it("creates a function that only takes a certain # of args", function() {
+      var fn = spy();
+      var one = _.arity(fn, 1);
+      one("one", "two", "three");
+      expect(fn).to.be.calledWith("one");
+    });
+  });
 });
